@@ -1,0 +1,5 @@
+{
+  "name": "Gems Architect AI+",
+  "description": "Professional prompt engineering tool to design AI personas and workflows.",
+  "requestFramePermissions": ["microphone"]
+}
