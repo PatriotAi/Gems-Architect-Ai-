@@ -54,7 +54,8 @@ import {
   Lock,
   Unlock,
   FolderOpen,
-  Shield
+  Shield,
+  Key
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
@@ -109,10 +110,33 @@ const INITIAL_TREE: TreeNode[] = [
 ];
 
 // --- GEMINI CONFIG ---
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+const getAiInstance = (customKey?: string) => {
+  const metaEnv = (import.meta as any).env;
+  const key = customKey || (typeof window !== 'undefined' ? localStorage.getItem('user_gemini_api_key') : '') || process.env.GEMINI_API_KEY || (metaEnv && metaEnv.VITE_GEMINI_API_KEY) || '';
+  return new GoogleGenAI({ apiKey: key });
+};
+
+let ai = getAiInstance();
 
 export default function App() {
   // --- STATE ---
+  const [userApiKey, setUserApiKey] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('user_gemini_api_key') || '' : ''));
+  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
+
+  const handleSaveApiKey = (key: string) => {
+    const trimmed = key.trim();
+    setUserApiKey(trimmed);
+    if (typeof window !== 'undefined') {
+      if (trimmed) {
+        localStorage.setItem('user_gemini_api_key', trimmed);
+      } else {
+        localStorage.removeItem('user_gemini_api_key');
+      }
+    }
+    ai = getAiInstance(trimmed);
+    setIsApiKeyModalOpen(false);
+  };
+
   const [mobileTab, setMobileTab] = useState<'core' | 'builder' | 'chat'>('builder');
   const [role, setRole] = useState("Універсальний Асистент");
   const [tone, setTone] = useState("Professional");
@@ -871,6 +895,15 @@ export default function App() {
             </div>
           )}
 
+          <button
+            onClick={() => setIsApiKeyModalOpen(true)}
+            className="p-1 px-2.5 bg-zinc-900 border border-zinc-800 hover:border-amber-500/50 rounded-lg text-xs font-semibold text-amber-400 hover:text-amber-300 transition flex items-center gap-1.5 shrink-0"
+            title="Налаштувати Gemini API Key"
+          >
+            <Key className="w-3.5 h-3.5" />
+            <span>{userApiKey ? 'API Key ✓' : '🔑 API Key'}</span>
+          </button>
+
           <div className="flex items-center gap-2 bg-zinc-900 rounded-lg px-2 border border-zinc-800 min-w-[140px]">
             <Globe className="w-3 h-3 text-zinc-500" />
             <input 
@@ -1579,6 +1612,68 @@ export default function App() {
                     ))}
                   </div>
                 )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+
+        {/* API KEY CONFIG MODAL */}
+        {isApiKeyModalOpen && (
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl"
+            >
+              <div className="p-5 border-b border-zinc-800 flex justify-between items-center bg-gradient-to-r from-amber-950/40 to-transparent">
+                <h2 className="text-xs font-bold text-amber-300 flex items-center gap-2 uppercase tracking-widest">
+                  <Key className="w-4 h-4 text-amber-400" /> Налаштування Gemini API Key
+                </h2>
+                <button onClick={() => setIsApiKeyModalOpen(false)} className="text-zinc-500 hover:text-white transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="p-5 space-y-4 text-xs">
+                <p className="text-zinc-400 leading-relaxed text-[11px]">
+                  Якщо ви використовуєте додаток без налаштованого сервера, введіть ваш власної Gemini API Key. Всі запити виконуватимуться безпосередньо з вашого браузера.
+                </p>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] uppercase font-bold text-zinc-500">Ваш Gemini API Key:</label>
+                  <input
+                    type="password"
+                    value={userApiKey}
+                    onChange={(e) => setUserApiKey(e.target.value)}
+                    placeholder="AIzaSy..."
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-xs text-amber-300 focus:border-amber-500 outline-none font-mono"
+                  />
+                </div>
+
+                <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800 text-[10px] text-zinc-500 flex items-start gap-2">
+                  <Sparkles className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <span>
+                    Ключ можна безкоштовно отримати у <a href="https://aistudio.google.com/" target="_blank" rel="noreferrer" className="text-amber-400 underline font-bold">Google AI Studio</a>. Він зберігається суто у вашому локальному браузері (localStorage).
+                  </span>
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <button
+                    onClick={() => handleSaveApiKey(userApiKey)}
+                    className="flex-1 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition text-xs shadow-md"
+                  >
+                    Зберегти ключ
+                  </button>
+                  {userApiKey && (
+                    <button
+                      onClick={() => handleSaveApiKey('')}
+                      className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 font-bold rounded-lg transition text-xs"
+                    >
+                      Очистити
+                    </button>
+                  )}
+                </div>
               </div>
             </motion.div>
           </div>

@@ -2,13 +2,29 @@
 
 Платформа проектування, моделювання та безпечного розгортання Агентного ШІ (**Custom Gems**) на базі **Google Gemini 3.5 & 3.1 Pro/Flash**, підтриманням **LLM Guardrails**, стандарту **EU AI Act / GDPR 2026**, **Media Analytics** та **Creative Studio**.
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/PatriotAi/Gems-Architect-Ai-&env=VITE_GEMINI_API_KEY)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/PatriotAi/Gems-Architect-Ai-)
+
+---
+
+## 🌐 Як відкрити та застосувати у веб-браузері
+
+### Варіант 1: Запуск у 1 клік через Vercel / Netlify (Рекомендовано)
+1. Натисніть кнопку **[Deploy with Vercel]** вище.
+2. Авторизуйтесь у Vercel за допомогою вашого GitHub-акаунту.
+3. Додайте змінну середовища: `VITE_GEMINI_API_KEY` (ваш безкоштовний ключ з [Google AI Studio](https://aistudio.google.com/)).
+4. Натисніть **Deploy** — за 30 секунд додаток буде готовий і матиме власне публічне веб-посилання!
+
+### Варіант 2: Введення API ключа прямо в інтерфейсі програми
+Якщо ви відкриваєте розгорнуту версію без попередньо налаштованого сервера, ви можете просто натиснути кнопку **🔑 API Key** у правому верхньому куті веб-додатку та ввести свій Gemini API Key. Ключ безпечно зберігається у вашому локальному браузері (`localStorage`).
+
 ---
 
 ## 🌟 Основні Можливості
 
 - 🧠 **Конструктор Логіки та Навичок (Logic & Skills Tree)**:
   - Візуальне моделювання дерева мислення Gem.
-  - Автоматична генерація системних системних промптів та інструкцій.
+  - Автоматична генерація системних інструкцій.
   - Автозбереження стану у `localStorage` (із запобіганням втрати даних при перезавантаженні).
 
 - 🛡️ **Compliance & Guardrails Studio (Специфікація 2026)**:
@@ -31,12 +47,12 @@
 
 ---
 
-## 🚀 Швидкий Старт
+## 🚀 Локальний Запуск (Для розробників)
 
 ### 1. Клонування репозиторію
 ```bash
-git clone https://github.com/YOUR_USERNAME/gems-architect-intent-ai.git
-cd gems-architect-intent-ai
+git clone https://github.com/PatriotAi/Gems-Architect-Ai-.git
+cd Gems-Architect-Ai-
 ```
 
 ### 2. Встановлення залежностей
@@ -54,13 +70,12 @@ cp .env.example .env
 GEMINI_API_KEY="AIzaSy..."
 VITE_GEMINI_API_KEY="AIzaSy..."
 ```
-*(Отримати ключ безкоштовно можна в [Google AI Studio](https://aistudio.google.com/))*
 
-### 4. Запуск у режимі розробки
+### 4. Запуск локального сервера
 ```bash
 npm run dev
 ```
-Додаток буде доступний за адресою: `http://localhost:3000`
+Відкрийте у браузері: `http://localhost:3000`
 
 ---
 
@@ -73,14 +88,6 @@ npm run dev
 
 ---
 
-## 📦 Збірка для Продакшену
-
-```bash
-npm run build
-```
-Згенеровані статичні файли будуть у папці `dist/`. Проект можна безкоштовно розгорнути на **Vercel**, **Netlify**, **Cloudflare Pages** або **GitHub Pages**.
-
----
-
 ## 📄 Ліцензія
 MIT License
+
