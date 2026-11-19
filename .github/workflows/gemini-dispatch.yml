@@ -74,6 +74,26 @@ jobs:
           permission-issues: 'write'
           permission-pull-requests: 'write'
 
+      # Захист від форків: PR із чужої копії репозиторію не отримує рев'ю з секретами
+      # навіть за командою мейнтейнера (issue_comment/pull_request_review з форка
+      # виконуються в контексті базового репо з доступом до секретів).
+      - name: 'Reject fork PRs'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        env:
+          PR_NUMBER: '${{ github.event.pull_request.number || github.event.issue.number }}'
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: Number(process.env.PR_NUMBER),
+            });
+            const head = pr.head.repo ? pr.head.repo.full_name : null;
+            const base = `${context.repo.owner}/${context.repo.repo}`;
+            if (head !== base) {
+              core.setFailed(`Рев'ю PR із форка (${head}) заборонено: секрети не передаються.`);
+            }
+
       - name: 'Extract command'
         id: 'extract_command'
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
