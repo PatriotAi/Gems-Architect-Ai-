@@ -134,9 +134,9 @@ Triage задач, scheduled triage, `invoke` та `plan-execute` **свідом
 - **Ланцюг постачання (supply chain).** Усі `uses:` закріплені повним SHA.
   Gemini CLI (`@google/gemini-cli`) ставиться з npm у момент запуску
   (версія — `latest`, якщо не задано `GEMINI_CLI_VERSION`); для суворого
-  відтворюваного результату зафіксуйте `GEMINI_CLI_VERSION`. Також workflow
-  тягне образ `ghcr.io/github/github-mcp-server:v0.27.0` за тегом (не digest) —
-  так в офіційному прикладі.
+  відтворюваного результату зафіксуйте `GEMINI_CLI_VERSION`. Образ
+  `ghcr.io/github/github-mcp-server:v2.2.0` закріплено digest-ом (sha256),
+  тож його не можна непомітно підмінити (оновлено 2026-11-20).
 - **Відхилення від офіційного прикладу.** Офіційний `gemini-review.yml`
   встановлює зовнішнє розширення `gemini-cli-extensions/code-review` з гілки
   за замовчуванням (без SHA). Тут замість нього використано версіонований у
