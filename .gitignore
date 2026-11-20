@@ -6,3 +6,11 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Gemini CLI: локальні налаштування, телеметрія та артефакти запусків
+.gemini/*
+# …але команди рев'ю версіонуються в репозиторії
+!.gemini/commands/
+
+# GitHub App / GCP credentials, які створює дія run-gemini-cli
+gha-creds-*.json
